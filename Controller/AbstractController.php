@@ -183,14 +183,19 @@ abstract class AbstractController
      * then the content type of the response will be set to text/plain instead.
      *
      * @param mixed $data
+     * @param null|int $statusCode
      *
      * @return JsonResponse
      */
-    protected function createSupportedJsonResponse($data)
+    protected function createSupportedJsonResponse($data, $statusCode = null)
     {
         $request = $this->container->get('request');
         $response = new JsonResponse($data);
         $response->headers->set('Vary', 'Accept');
+
+        if ($statusCode) {
+            $response->setStatusCode($statusCode);
+        }
 
         if (!in_array('application/json', $request->getAcceptableContentTypes())) {
             $response->headers->set('Content-type', 'text/plain');

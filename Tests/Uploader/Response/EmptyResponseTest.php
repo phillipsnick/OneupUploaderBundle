@@ -28,4 +28,16 @@ class TestEmptyResponse extends \PHPUnit_Framework_TestCase
         $this->assertTrue(is_array($assembled));
         $this->assertCount(2, $assembled);
     }
+
+    public function testStatusCode()
+    {
+        $response = new EmptyResponse();
+
+        $this->assertNull($response->getStatusCode());
+        $this->assertFalse($response->hasStatusCode());
+
+        $response->setStatusCode(415);
+        $this->assertEquals(415, $response->getStatusCode());
+        $this->assertTrue($response->hasStatusCode());
+    }
 }

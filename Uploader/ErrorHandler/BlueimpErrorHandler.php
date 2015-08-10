@@ -12,5 +12,6 @@ class BlueimpErrorHandler implements ErrorHandlerInterface
     {
         $message = $exception->getMessage();
         $response->addToOffset(array('error' => $message), array('files'));
+        $response->setStatusCode($exception->getCode());
     }
 }

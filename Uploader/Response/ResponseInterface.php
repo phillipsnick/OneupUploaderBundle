@@ -10,4 +10,19 @@ interface ResponseInterface
      * @return array
      */
     public function assemble();
+
+    /**
+     * @param $code
+     */
+    public function setStatusCode($code);
+
+    /**
+     * @return int|null
+     */
+    public function getStatusCode();
+
+    /**
+     * @return bool
+     */
+    public function hasStatusCode();
 }

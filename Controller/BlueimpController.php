@@ -29,7 +29,7 @@ class BlueimpController extends AbstractChunkedController
             }
         }
 
-        return $this->createSupportedJsonResponse($response->assemble());
+        return $this->createSupportedJsonResponse($response->assemble(), $response->getStatusCode());
     }
 
     public function progress()

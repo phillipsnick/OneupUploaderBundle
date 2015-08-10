@@ -8,6 +8,8 @@ abstract class AbstractResponse implements \ArrayAccess, ResponseInterface
 {
     protected $data;
 
+    protected $statusCode;
+
     public function __construct()
     {
         $this->data = array();
@@ -59,5 +61,29 @@ abstract class AbstractResponse implements \ArrayAccess, ResponseInterface
             }
         }
         $element[] = $value;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setStatusCode($code)
+    {
+        $this->statusCode = $code;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getStatusCode()
+    {
+        return $this->statusCode;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasStatusCode()
+    {
+        return $this->statusCode !== null;
     }
 }
