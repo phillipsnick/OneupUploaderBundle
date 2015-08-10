@@ -19,7 +19,7 @@ class AllowedMimetypeValidationListener
         $mimetype = $file->getMimeType();
 
         if (!in_array($mimetype, $config['allowed_mimetypes'])) {
-            throw new ValidationException('error.whitelist');
+            throw new ValidationException('error.whitelist', 415);
         }
     }
 }

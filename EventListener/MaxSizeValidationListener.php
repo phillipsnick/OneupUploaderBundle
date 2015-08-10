@@ -13,7 +13,7 @@ class MaxSizeValidationListener
         $file   = $event->getFile();
 
         if ($file->getSize() > $config['max_size']) {
-            throw new ValidationException('error.maxsize');
+            throw new ValidationException('error.maxsize', 413);
         }
     }
 }

@@ -19,7 +19,7 @@ class DisallowedMimetypeValidationListener
         $mimetype = $file->getExtension();
 
         if (in_array($mimetype, $config['disallowed_mimetypes'])) {
-            throw new ValidationException('error.blacklist');
+            throw new ValidationException('error.blacklist', 415);
         }
     }
 }
