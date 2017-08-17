@@ -1,11 +1,14 @@
 Getting started
 ===============
 
-The OneupUploaderBundle is a Symfony2 bundle developed and tested for versions 2.1+. This bundle does only provide a solid backend for the supported types of Javascript libraries. It does however not provide the assets itself. So in order to use any uploader, you first have to download and integrate it by yourself.
+The OneupUploaderBundle is a Symfony2 bundle developed and tested for versions 2.4+. This bundle does only provide a solid backend for the supported types of Javascript libraries. It does however not provide the assets itself. So in order to use any uploader, you first have to download and integrate it by yourself.
 
 ## Prerequisites
 
-This bundle is tested using Symfony2 versions 2.1+.
+This bundle is tested using Symfony 2.4+.
+
+**With Symfony 2.3**  
+If you want to use the bundle with Symfony 2.3, head over to the documentation for [1.3.x](https://github.com/1up-lab/OneupUploaderBundle/blob/release-1.3.x/Resources/doc/index.md).
 
 ### Translations
 If you wish to use the default texts provided with this bundle, you have to make sure that you have translator
@@ -22,7 +25,7 @@ framework:
 
 Perform the following steps to install and use the basic functionality of the OneupUploaderBundle:
 
-* Download OnueupUploaderBundle using Composer
+* Download OneupUploaderBundle using Composer
 * Enable the bundle
 * Configure the bundle
 * Prepare your frontend
@@ -31,19 +34,9 @@ Perform the following steps to install and use the basic functionality of the On
 
 Add OneupUploaderBundle to your composer.json using the following construct:
 
-```js
-{
-    "require": {
-        "oneup/uploader-bundle": "~1.3"
-    }
-}
-```
+    $ composer require oneup/uploader-bundle "~1.4"
 
-Now tell composer to download the bundle by running the following command:
-
-    $> php composer.phar update oneup/uploader-bundle
-
-Composer will now fetch and install this bundle in the vendor directory ```vendor/oneup```
+Composer will install the bundle to your project's ``vendor/oneup/uploader-bundle`` directory.
 
 ### Step 2: Enable the bundle
 
@@ -72,7 +65,7 @@ This bundle was designed to just work out of the box. The only thing you have to
 oneup_uploader:
     mappings:
         gallery:
-            frontend: blueimp # or any uploader you use in the frontend
+            frontend: dropzone # or any uploader you use in the frontend
 ```
 
 To enable the dynamic routes, add the following to your routing configuration file.
@@ -85,13 +78,43 @@ oneup_uploader:
     type: uploader
 ```
 
-The default directory that is used to upload files to is `web/uploads/{mapping_name}`.
+The default directory that is used to upload files to is `web/uploads/{mapping_name}`. In case you want to avoid a separated mapping folder, you can set `root_folder: true` and the default directory will be `web/uploads`.
+
+```yaml
+# app/config/config.yml
+
+oneup_uploader:
+    mappings:
+        gallery:
+            root_folder: true
+```
 
 > It was reported that in some cases this directory was not created automatically. Please double check its existance if the upload does not work for you.
+> You can improve the directory structure checking the "[Change the directory structure](custom_namer.md#change-the-directory-structure)".
 
-### Step 4: Prepare your frontend
+If you want to use your own path, for example /data/uploads :
 
-No matter what library you choose, be sure to connect the corresponding endpoint property to the dynamic route created from your mapping. To get a url for a specific mapping you can use the `oneup_uploader.templating.uploader_helper` service as follows:
+```yaml
+# app/config/config.yml
+
+oneup_uploader:
+    mappings:
+        gallery:
+            storage:
+                directory: "%kernel.root_dir%/../data/uploads/"
+```
+
+### Step 4: Check if the bundle is working correctly
+
+No matter which JavaScript library you are going to use ultimately, we recommend to test the bundle with Dropzone first, since this one features the easiest setup process:
+
+1. [Install Dropzone](frontend_dropzone.md)
+1. Drag a file onto the dashed rectangle. The upload should start immediately. However, you won't get any visual feedback yet.
+1. Check your `web/uploads/gallery` directory: If you see the file there, the OneupUploaderBundle is working correctly. If you don't have that folder, create it manually and try again.
+
+### Step 5: Prepare your real frontend
+
+Now it's up to you to decide for a JavaScript library or write your own. Be sure to connect the corresponding endpoint property to the dynamic route created from your mapping. To get a url for a specific mapping you can use the `oneup_uploader.templating.uploader_helper` service as follows:
 
 ```php
 $helper = $this->container->get('oneup_uploader.templating.uploader_helper');
@@ -104,14 +127,14 @@ or in a Twig template you can use the `oneup_uploader_endpoint` function:
 
 So if you take the mapping described before, the generated route name would be `_uploader_gallery`. Follow one of the listed guides to include your frontend:
 
-* [Use FineUploader](frontend_fineuploader.md)
+* [Use Dropzone](frontend_dropzone.md)
 * [Use jQuery File Upload](frontend_blueimp.md)
-* [Use YUI3 Uploader](frontend_yui3.md)
-* [Use Uploadify](frontend_uploadify.md)
+* [Use Plupload](frontend_plupload.md)
+* [Use FineUploader](frontend_fineuploader.md)
 * [Use FancyUpload](frontend_fancyupload.md)
 * [Use MooUpload](frontend_mooupload.md)
-* [Use Plupload](frontend_plupload.md)
-* [Use Dropzone](frontend_dropzone.md)
+* [Use YUI3 Uploader](frontend_yui3.md)
+* [Use Uploadify](frontend_uploadify.md)
 
 ## Next steps
 
@@ -122,6 +145,7 @@ some more advanced features.
 * [Return custom data to frontend](response.md)
 * [Enable chunked uploads](chunked_uploads.md)
 * [Using the Orphanage](orphanage.md)
+* [Use Flysystem as storage layer](flysystem_storage.md)
 * [Use Gaufrette as storage layer](gaufrette_storage.md)
 * [Include your own Namer](custom_namer.md)
 * [Use custom error handlers](custom_error_handler.md)

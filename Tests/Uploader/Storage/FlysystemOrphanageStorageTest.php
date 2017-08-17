@@ -1,20 +1,21 @@
 <?php
 
 namespace Oneup\UploaderBundle\Tests\Uploader\Storage;
-use Gaufrette\File;
-use Gaufrette\Filesystem as GaufretteFilesystem;
 
-use Gaufrette\Adapter\Local as Adapter;
-use Oneup\UploaderBundle\Uploader\Chunk\Storage\GaufretteStorage as GaufretteChunkStorage;
-
-use Oneup\UploaderBundle\Uploader\File\GaufretteFile;
-use Oneup\UploaderBundle\Uploader\Storage\GaufretteOrphanageStorage;
-use Oneup\UploaderBundle\Uploader\Storage\GaufretteStorage;
+use League\Flysystem\File;
+use Oneup\UploaderBundle\Uploader\Chunk\Storage\FlysystemStorage as ChunkStorage;
+use Oneup\UploaderBundle\Uploader\File\FlysystemFile;
+use Oneup\UploaderBundle\Uploader\Storage\FlysystemOrphanageStorage;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
-class GaufretteOrphanageStorageTest extends OrphanageTest
+use League\Flysystem\Adapter\Local as Adapter;
+use League\Flysystem\Filesystem as FSAdapter;
+use Oneup\UploaderBundle\Uploader\Storage\FlysystemStorage as Storage;
+
+class FlysystemOrphanageStorageTest extends OrphanageTest
 {
     protected $chunkDirectory;
     protected $chunksKey = 'chunks';
@@ -32,17 +33,17 @@ class GaufretteOrphanageStorageTest extends OrphanageTest
             $this->markTestSkipped('Temporary directories do not match');
         }
 
-        $filesystem = new \Symfony\Component\Filesystem\Filesystem();
+        $filesystem = new Filesystem();
         $filesystem->mkdir($this->realDirectory);
         $filesystem->mkdir($this->chunkDirectory);
         $filesystem->mkdir($this->tempDirectory);
 
         $adapter = new Adapter($this->realDirectory, true);
-        $filesystem = new GaufretteFilesystem($adapter);
+        $filesystem = new FSAdapter($adapter);
 
-        $this->storage = new GaufretteStorage($filesystem, 100000);
+        $this->storage = new Storage($filesystem, 100000);
 
-        $chunkStorage = new GaufretteChunkStorage($filesystem, 100000, null, 'chunks');
+        $chunkStorage = new ChunkStorage($filesystem, 100000, null, 'chunks');
 
         // create orphanage
         $session = new Session(new MockArraySessionStorage());
@@ -50,7 +51,7 @@ class GaufretteOrphanageStorageTest extends OrphanageTest
 
         $config = array('directory' => 'orphanage');
 
-        $this->orphanage = new GaufretteOrphanageStorage($this->storage, $session, $chunkStorage, $config, 'cat');
+        $this->orphanage = new FlysystemOrphanageStorage($this->storage, $session, $chunkStorage, $config, 'cat');
 
         for ($i = 0; $i < $this->numberOfPayloads; $i ++) {
             // create temporary file as if it was reassembled by the chunk manager
@@ -63,7 +64,7 @@ class GaufretteOrphanageStorageTest extends OrphanageTest
             //gaufrette needs the key relative to it's root
             $fileKey = str_replace($this->realDirectory, '', $file);
 
-            $this->payloads[] = new GaufretteFile(new File($fileKey, $filesystem), $filesystem);
+            $this->payloads[] = new FlysystemFile(new File($filesystem, $fileKey), $filesystem);
         }
     }
 

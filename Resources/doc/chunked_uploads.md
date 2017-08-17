@@ -1,7 +1,7 @@
 Using Chunked Uploads
 =====================
 
-Fine Uploader comes bundled with the possibility to use so called chunked uploads. If enabed, an uploaded file will be split into equal sized blobs which are sequentially uploaded afterwards. In order to use this feature, be sure to enable it in the frontend.
+Fine Uploader comes bundled with the possibility to use so called chunked uploads. If enabled, an uploaded file will be split into equal sized blobs which are sequentially uploaded afterwards. In order to use this feature, be sure to enable it in the frontend.
 
 ```js
 $(document).ready(function()
@@ -82,6 +82,6 @@ See the [Use Chunked Uploads behind Load Balancers](load_balancers.md) section i
 
 The ChunkManager can be forced to clean up old and orphanaged chunks by using the command provided by the OneupUploaderBundle.
 
-    $> php app/console oneup:uploader:clean-chunks
+    $> php app/console oneup:uploader:clear-chunks
 
 This parameter will clean all chunk files older than the `maxage` value in your configuration.

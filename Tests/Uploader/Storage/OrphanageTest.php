@@ -2,13 +2,18 @@
 
 namespace Oneup\UploaderBundle\Tests\Uploader\Storage;
 
+use Oneup\UploaderBundle\Uploader\Storage\FlysystemOrphanageStorage;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Filesystem\Filesystem;
 
-abstract class OrphanageTest extends \PHPUnit_Framework_Testcase
+abstract class OrphanageTest extends \PHPUnit_Framework_TestCase
 {
     protected $tempDirectory;
     protected $realDirectory;
+
+    /**
+     * @var \Oneup\UploaderBundle\Uploader\Storage\OrphanageStorageInterface
+     */
     protected $orphanage;
     protected $storage;
     protected $payloads;
